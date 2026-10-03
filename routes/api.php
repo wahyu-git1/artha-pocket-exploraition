@@ -90,6 +90,7 @@ Route::prefix('v1')->group(function () {
         // -----------------------------------------------------------------------
         Route::prefix('smart-entry')->group(function () {
             Route::post('/parse',    [\App\Http\Controllers\Api\V1\SmartEntryController::class, 'parse']);
+            Route::post('/submit',   [\App\Http\Controllers\Api\V1\SmartEntryController::class, 'submit']);
             Route::post('/feedback', [\App\Http\Controllers\Api\V1\SmartEntryController::class, 'feedback']);
         });
 

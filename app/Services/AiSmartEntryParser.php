@@ -48,8 +48,8 @@ Schema per object:
 {
     "item": "Cleaned up item name, e.g. Bakso",
     "amount": 10000,
-    "type": "expense",
-    "spent_at": "YYYY-MM-DD",
+    "type": "expense", // atau "income"
+    "date": "YYYY-MM-DD",
     "category_id": "uuid-here or null",
     "category_name": "Name of the matched category or null",
     "confidence_score": 0.95
@@ -64,7 +64,7 @@ TEXT;
             return (new SmartEntryParser())->parse($text, $userId);
         }
 
-        $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={$apiKey}", [
+        $response = Http::timeout(30)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={$apiKey}", [
             'contents' => [
                 [
                     'parts' => [
@@ -79,7 +79,7 @@ TEXT;
         ]);
 
         if (!$response->successful()) {
-            throw new \Exception('Failed to communicate with AI model.');
+            throw new \Exception('Failed to communicate with AI model: ' . $response->status() . ' - ' . $response->body());
         }
 
         $responseData = $response->json();
