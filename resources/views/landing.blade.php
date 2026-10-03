@@ -29,7 +29,7 @@
                 🌐 Masuk via Web
             </a>
             <a href="#" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-semibold py-4 px-8 rounded-2xl transition transform hover:-translate-y-1">
-                📱 Unduh Aplikasi Android
+                📱 Unduh Aplikasi Android 
             </a>
         </div>
     </div>
