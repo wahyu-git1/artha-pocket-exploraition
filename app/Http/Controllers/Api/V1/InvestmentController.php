@@ -17,7 +17,7 @@ class InvestmentController extends BaseController
     {
         $investments = QueryBuilder::for(Investment::class)
             ->where('user_id', $request->user()->id)
-            ->allowedFilters(['instrument_type', 'income_id'])
+            ->allowedFilters('instrument_type', 'income_id')
             ->orderByDesc('invested_at')
             ->get();
 

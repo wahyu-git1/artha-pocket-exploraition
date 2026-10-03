@@ -21,7 +21,7 @@ class ExpenseController extends BaseController
     {
         $expenses = QueryBuilder::for(Expense::class)
             ->where('user_id', $request->user()->id)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::exact('category_id'),
                 AllowedFilter::exact('income_id'),
                 AllowedFilter::callback('from', fn (Builder $query, $value) => $query->where('spent_at', '>=', $value)),
@@ -30,14 +30,14 @@ class ExpenseController extends BaseController
                 AllowedFilter::callback('max_amount', fn (Builder $query, $value) => $query->where('amount', '<=', $value)),
                 AllowedFilter::callback('q', fn (Builder $query, $value) => $query->where('item', 'like', "%{$value}%")),
             ])
-            ->allowedSorts(['spent_at', 'amount'])
+            ->allowedSorts('spent_at', 'amount')
             ->defaultSort('-spent_at')
             ->paginate($request->query('limit', 20));
 
         // Get total amount for the current query (ignoring pagination)
         $totalAmount = QueryBuilder::for(Expense::class)
             ->where('user_id', $request->user()->id)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::exact('category_id'),
                 AllowedFilter::exact('income_id'),
                 AllowedFilter::callback('from', fn (Builder $query, $value) => $query->where('spent_at', '>=', $value)),
@@ -189,5 +189,21 @@ class ExpenseController extends BaseController
                 'income_balance' => $balanceService->calculate($incomeId),
             ]
         ], 200); // Usually 204 no content, but since we return meta, we use 200
+    }
+
+    public function uploadReceipt(Request $request, Expense $expense): JsonResponse
+    {
+        if ($expense->user_id !== $request->user()->id) {
+            return $this->error(ErrorCode::FORBIDDEN, 'Akses ditolak', [], 403);
+        }
+
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        $path = $request->file('image')->store('receipts', 'public');
+        $expense->update(['receipt_image_path' => '/storage/' . $path]);
+
+        return $this->success(new ExpenseResource($expense));
     }
 }

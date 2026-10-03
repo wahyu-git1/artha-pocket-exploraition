@@ -9,28 +9,33 @@ use Carbon\Carbon;
 
 class EmergencyFundService
 {
-    public function getRecommendation(User $user): array
+    public function getRecommendation(User $user, array $overrides = []): array
     {
         $multiplier = 3; // Base
         $reasoning = ['Base recommendation: 3x monthly expense.'];
 
-        if ($user->marital_status === 'married') {
+        $maritalStatus = $overrides['marital_status'] ?? $user->marital_status;
+        $dependentsCount = $overrides['dependents_count'] ?? $user->dependents_count;
+        $incomeStability = $overrides['income_stability'] ?? $user->income_stability;
+        $hasInstallments = $overrides['has_installments'] ?? $user->has_installments;
+
+        if ($maritalStatus === 'married') {
             $multiplier += 1;
             $reasoning[] = '+1x for married status.';
         }
 
-        if ($user->dependents_count > 0) {
-            $added = min(3, $user->dependents_count);
+        if ($dependentsCount > 0) {
+            $added = min(3, (int) $dependentsCount);
             $multiplier += $added;
             $reasoning[] = "+{$added}x for dependents.";
         }
 
-        if ($user->income_stability === 'variable') {
+        if ($incomeStability === 'variable') {
             $multiplier += 2;
             $reasoning[] = '+2x for variable income.';
         }
 
-        if ($user->has_installments) {
+        if ($hasInstallments) {
             $multiplier += 1;
             $reasoning[] = '+1x for having installments.';
         }

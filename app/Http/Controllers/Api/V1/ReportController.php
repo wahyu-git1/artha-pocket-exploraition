@@ -16,8 +16,8 @@ class ReportController extends BaseController
         $to = $request->query('to', date('Y-m-t'));
         $type = $request->query('type', 'expense'); // For now, we only aggregate expenses
 
-        $data = Expense::where('user_id', $userId)
-            ->whereBetween('spent_at', [$from, $to])
+        $data = Expense::where('expenses.user_id', $userId)
+            ->whereBetween('expenses.spent_at', [$from, $to])
             ->join('categories', 'expenses.category_id', '=', 'categories.id')
             ->where('categories.type', $type)
             ->select('categories.id', 'categories.name', 'categories.icon', 'categories.color', DB::raw('SUM(expenses.amount) as total'))
@@ -50,5 +50,16 @@ class ReportController extends BaseController
         }
 
         return $this->success($results);
+    }
+
+    public function aiInsights(Request $request, \App\Services\FinancialDecisionService $service): JsonResponse
+    {
+        $userId = $request->user()->id;
+        $from = $request->query('from', $request->input('from', date('Y-m-01')));
+        $to = $request->query('to', $request->input('to', date('Y-m-t')));
+
+        $analysis = $service->analyze($userId, $from, $to);
+
+        return $this->success($analysis);
     }
 }

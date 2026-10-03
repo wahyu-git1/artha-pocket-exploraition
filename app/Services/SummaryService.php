@@ -44,8 +44,8 @@ class SummaryService
             ];
         }
 
-        $perCategoryRaw = Expense::where('user_id', $userId)
-            ->whereBetween('spent_at', [$startDate, $endDate])
+        $perCategoryRaw = Expense::where('expenses.user_id', $userId)
+            ->whereBetween('expenses.spent_at', [$startDate, $endDate])
             ->join('categories', 'expenses.category_id', '=', 'categories.id')
             ->select('categories.id', 'categories.name', DB::raw('SUM(expenses.amount) as total'))
             ->groupBy('categories.id', 'categories.name')

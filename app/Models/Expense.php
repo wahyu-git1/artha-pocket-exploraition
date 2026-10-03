@@ -25,6 +25,7 @@ class Expense extends Model
         'confidence_score',
         'source',
         'client_id',
+        'receipt_image_path',
     ];
 
     protected function casts(): array

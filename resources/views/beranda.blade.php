@@ -276,7 +276,27 @@
             if (res.ok) {
                 seModal.classList.add('hidden');
                 seInput.value = '';
-                alert('Berhasil dicatat!');
+                
+                let expTotal = 0, incTotal = 0;
+                parsedSmartEntryItems.forEach(i => {
+                    if (i.type === 'income') incTotal += (parseInt(i.amount) || 0);
+                    else expTotal += (parseInt(i.amount) || 0);
+                });
+                
+                let msg = '';
+                if (parsedSmartEntryItems.length === 1) {
+                    const item = parsedSmartEntryItems[0];
+                    const label = item.type === 'income' ? 'Pemasukan' : 'Pengeluaran';
+                    msg = `Berhasil mencatat ${label} "${item.item}" sebesar ${fmtRp(item.amount)}!`;
+                } else {
+                    const parts = [];
+                    if (expTotal > 0) parts.push(`Pengeluaran: ${fmtRp(expTotal)}`);
+                    if (incTotal > 0) parts.push(`Pemasukan: ${fmtRp(incTotal)}`);
+                    msg = `Berhasil mencatat ${parsedSmartEntryItems.length} transaksi (${parts.join(', ')})!`;
+                }
+                
+                alert(msg);
+                parsedSmartEntryItems = [];
                 fetchDashboardData(); // Refresh UI
             } else {
                 const data = await res.json();

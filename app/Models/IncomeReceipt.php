@@ -21,6 +21,7 @@ class IncomeReceipt extends Model
         'note',
         'raw_input',
         'client_id',
+        'receipt_image_path',
     ];
 
     protected function casts(): array

@@ -20,7 +20,7 @@ class EmergencyFundController extends BaseController
 {
     public function recommendation(Request $request, EmergencyFundService $service): JsonResponse
     {
-        $result = $service->getRecommendation($request->user());
+        $result = $service->getRecommendation($request->user(), $request->all());
         return $this->success($result);
     }
 
@@ -156,7 +156,7 @@ class EmergencyFundController extends BaseController
 
         $transactions = QueryBuilder::for(EmergencyTransaction::class)
             ->where('fund_id', $fund->id)
-            ->allowedFilters(['type'])
+            ->allowedFilters('type')
             ->orderByDesc('occurred_at')
             ->get();
 

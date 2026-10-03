@@ -21,6 +21,7 @@ class ExpenseResource extends JsonResource
             'confidence_score' => $this->confidence_score,
             'source' => $this->source,
             'client_id' => $this->client_id,
+            'receipt_image_path' => $this->receipt_image_path,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

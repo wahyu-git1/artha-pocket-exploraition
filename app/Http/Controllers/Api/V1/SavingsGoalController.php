@@ -35,7 +35,7 @@ class SavingsGoalController extends BaseController
     {
         $goals = QueryBuilder::for(SavingsGoal::class)
             ->where('user_id', $request->user()->id)
-            ->allowedFilters(['status'])
+            ->allowedFilters('status')
             ->get();
 
         return $this->success(SavingsGoalResource::collection($goals));

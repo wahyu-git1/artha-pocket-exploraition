@@ -16,7 +16,7 @@ class IncomeController extends BaseController
     {
         $incomes = QueryBuilder::for(Income::class)
             ->where('user_id', $request->user()->id)
-            ->allowedFilters(['is_active'])
+            ->allowedFilters('is_active')
             ->get();
 
         return $this->success(IncomeResource::collection($incomes));

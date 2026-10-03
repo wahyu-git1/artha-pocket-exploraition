@@ -5,8 +5,11 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'landing')->name('landing');
 
 Route::view('/login', 'login')->name('login');
+Route::view('/register', 'auth.register')->name('register');
 
 Route::view('/dashboard', 'dashboard')->name('dashboard');
+Route::redirect('/beranda', '/dashboard')->name('beranda');
+Route::view('/onboarding', 'onboarding')->name('onboarding');
 
 Route::view('/transaksi', 'transaksi')->name('transaksi');
 
@@ -16,15 +19,15 @@ Route::view('/laporan', 'laporan')->name('laporan');
 
 Route::view('/kategori', 'kategori')->name('kategori');
 
-Route::view('/target', 'dashboard')->name('target');
+Route::view('/target', 'target')->name('target');
 
-Route::view('/dana-darurat', 'dashboard')->name('dana-darurat');
+Route::view('/dana-darurat', 'dana-darurat')->name('dana-darurat');
 
-Route::view('/alokasi', 'dashboard')->name('alokasi');
+Route::view('/alokasi', 'alokasi')->name('alokasi');
 
-Route::view('/investasi', 'dashboard')->name('investasi');
+Route::view('/investasi', 'investasi')->name('investasi');
 
-Route::view('/pengaturan', 'dashboard')->name('pengaturan');
+Route::view('/pengaturan', 'pengaturan')->name('pengaturan');
 
 // --- RUTE SWAGGER (BACKEND) ---
 Route::get('/docs/swagger', function () { return view('swagger'); });

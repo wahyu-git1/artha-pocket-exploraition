@@ -23,7 +23,7 @@ class CategoryController extends BaseController
                 $query->whereNull('user_id')
                       ->orWhere('user_id', $userId);
             })
-            ->allowedFilters(['type'])
+            ->allowedFilters('type')
             ->get();
 
         return $this->success(CategoryResource::collection($categories));

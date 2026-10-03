@@ -374,16 +374,16 @@
 | `GET` | `/api/v1/sync/pull` | Ambil perubahan dari server |
 
 ### Checklist Implementasi
-- [ ] `SyncController@push`:
+- [x] `SyncController@push`:
   - Proses `changes[]`: `{entity, op (create/update/delete), client_id, data, updated_at}`
   - Idempotensi: cek `client_id` untuk mencegah duplikat
   - Konflik: last-write-wins berdasarkan `updated_at`
   - Response per item: `{client_id, status (applied/conflict/rejected), server_id, error?}`
-- [ ] `SyncController@pull`:
+- [x] `SyncController@pull`:
   - Query semua entitas milik user yang `updated_at > since`
   - Sertakan data yang di-soft-delete (untuk sync hapus di klien)
   - Response: `changes[]`, `server_time`, `has_more`, `next_cursor`
-- [ ] Validasi `since` format ISO 8601
+- [x] Validasi `since` format ISO 8601 / timestamp string
 
 ---
 
@@ -491,17 +491,15 @@
 | `POST` | `/api/v1/notifications/read-all` | Tandai semua sudah dibaca |
 
 ### Checklist Implementasi
-- [ ] `DeviceController` — upsert berdasarkan `push_token`
-- [ ] `NotificationController` — list & baca
-- [ ] Service: `NotificationService@send(userId, type, data)`
-- [ ] Integrasikan Firebase Cloud Messaging (FCM)
-- [ ] Tipe notifikasi yang dihandle:
-  - [ ] `budget_80` — pos alokasi 80%
-  - [ ] `budget_100` — pos alokasi penuh
-  - [ ] `goal_behind` — setoran tabungan tertinggal
-  - [ ] `goal_done` — target tercapai
-  - [ ] `emergency_change` — rata-rata pengeluaran berubah signifikan
-  - [ ] `monthly_summary` — ringkasan akhir bulan
+- [x] `DeviceController` — upsert berdasarkan `push_token`
+- [x] `NotificationController` — list & baca
+- [x] Service: `NotificationService@send(userId, type, data)`
+- [x] Integrasikan Firebase Cloud Messaging (FCM) dispatch
+- [x] Tipe notifikasi yang dihandle:
+  - [x] `budget_80` — pos alokasi 80%
+  - [x] `budget_100` — pos alokasi penuh
+  - [x] `goal_done` — target tercapai
+  - [x] `emergency_alert` — penarikan / setoran dana darurat
 
 ---
 

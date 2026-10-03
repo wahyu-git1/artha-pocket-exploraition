@@ -82,6 +82,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/bulk',    [\App\Http\Controllers\Api\V1\ExpenseController::class, 'bulk']);
             Route::get('/{expense}',    [\App\Http\Controllers\Api\V1\ExpenseController::class, 'show']);
             Route::patch('/{expense}',  [\App\Http\Controllers\Api\V1\ExpenseController::class, 'update']);
+            Route::post('/{expense}/receipt', [\App\Http\Controllers\Api\V1\ExpenseController::class, 'uploadReceipt']);
             Route::delete('/{expense}', [\App\Http\Controllers\Api\V1\ExpenseController::class, 'destroy']);
         });
 
@@ -101,8 +102,11 @@ Route::prefix('v1')->group(function () {
         Route::prefix('reports')->group(function () {
             Route::get('/categories', [\App\Http\Controllers\Api\V1\ReportController::class, 'categories']);
             Route::get('/monthly',    [\App\Http\Controllers\Api\V1\ReportController::class, 'monthly']);
+            Route::match(['get', 'post'], '/ai-insights', [\App\Http\Controllers\Api\V1\ReportController::class, 'aiInsights']);
+            Route::match(['get', 'post'], '/decisions',   [\App\Http\Controllers\Api\V1\ReportController::class, 'aiInsights']);
         });
         Route::get('/exports/transactions', [\App\Http\Controllers\Api\V1\ExportController::class, 'transactions']);
+        Route::get('/reports/export/transactions', [\App\Http\Controllers\Api\V1\ExportController::class, 'transactions']);
 
         // -----------------------------------------------------------------------
         // FASE 1I — Sync

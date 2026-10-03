@@ -102,6 +102,11 @@ class AllocationController extends BaseController
         return $this->success(new AllocationPlanResource($plan));
     }
 
+    public function update(AllocationRequest $request, AllocationService $service): JsonResponse
+    {
+        return $this->store($request, $service);
+    }
+
     public function summary(Request $request, AllocationService $service): JsonResponse
     {
         $month = $request->query('month', date('Y-m'));
@@ -110,10 +115,15 @@ class AllocationController extends BaseController
         return $this->success($summary);
     }
 
-    public function getCategoryMapping(Request $request): JsonResponse
+    public function categoryMapping(Request $request): JsonResponse
     {
         $mappings = CategoryBucketMapping::where('user_id', $request->user()->id)->get();
         return $this->success($mappings);
+    }
+
+    public function getCategoryMapping(Request $request): JsonResponse
+    {
+        return $this->categoryMapping($request);
     }
 
     public function updateCategoryMapping(AllocationCategoryMappingRequest $request): JsonResponse

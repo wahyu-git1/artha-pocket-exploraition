@@ -106,6 +106,10 @@ TEXT;
         foreach ($items as $item) {
             if (!isset($item['amount']) || $item['amount'] <= 0) continue;
             
+            $spentAt = $item['spent_at'] ?? $item['date'] ?? Carbon::now()->toDateString();
+            $item['spent_at'] = $spentAt;
+            $item['date'] = $spentAt;
+
             if (isset($item['confidence_score']) && $item['confidence_score'] < 0.7) {
                 $needsReviewGlobal = true;
                 $item['needs_review'] = true;
