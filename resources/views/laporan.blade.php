@@ -12,7 +12,7 @@
     
     <!-- Bar Chart (6 Bulan) -->
     <div id="chart-bars" class="mt-6 flex items-end justify-between h-32 px-2 border-b border-white/20 pb-2">
-        <div class="w-full text-center text-xs text-gray-300">Memuat grafik...</div>
+        <div class="w-full text-center text-xs text-gray-300">Memuat grafik..</div>
     </div>
     <div id="chart-labels" class="flex justify-between text-[10px] text-gray-400 mt-2 px-2">
     </div>
