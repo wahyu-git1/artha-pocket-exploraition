@@ -48,17 +48,15 @@
         <form id="login-form" action="#" class="space-y-5">
             @csrf
             
-            <!-- Jika kamu membuat halaman Register, cukup tambahkan blok div ini untuk "Nama" di atas Email -->
-            
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input id="email" type="email" placeholder="nama@email.com" class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:border-[#1F4E79] focus:outline-none transition">
+                <input id="email" type="email" placeholder="nama@email.com" required class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:border-[#1F4E79] focus:outline-none transition">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi</label>
                 <div class="relative">
-                    <input id="password" type="password" placeholder="••••••••" class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:border-[#1F4E79] focus:outline-none transition">
+                    <input id="password" type="password" placeholder="••••••••" required class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:border-[#1F4E79] focus:outline-none transition">
                     <!-- Tombol Show/Hide -->
                     <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-[#1F4E79]">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>

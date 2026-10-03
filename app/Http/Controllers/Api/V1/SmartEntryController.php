@@ -56,20 +56,19 @@ class SmartEntryController extends BaseController
             'hit_count' => $pref->hit_count
         ]);
     }
-    public function submit(Request $request, AiSmartEntryParser $parser, \App\Services\IncomeBalanceService $balanceService): JsonResponse
+    public function submit(Request $request, \App\Services\IncomeBalanceService $balanceService): JsonResponse
     {
         $request->validate([
-            'text' => 'required|string|max:200'
+            'items' => 'required|array',
+            'items.*.type' => 'required|in:expense,income',
+            'items.*.item' => 'required|string',
+            'items.*.amount' => 'required|numeric',
+            'items.*.date' => 'nullable|date',
+            'items.*.category_id' => 'nullable|uuid'
         ]);
 
         $user = $request->user();
-
-        try {
-            $parsed = $parser->parse($request->text, $user->id);
-        } catch (\Exception $e) {
-            return $this->error(ErrorCode::SERVER_ERROR, 'Gagal: ' . $e->getMessage());
-        }
-
+        $parsed = ['items' => $request->items];
         $savedItems = [];
         $affectedIncomeIds = [];
 
@@ -103,7 +102,7 @@ class SmartEntryController extends BaseController
                         'item' => $item['item'],
                         'spent_at' => $item['date'] ?? date('Y-m-d'),
                         'source' => 'smart_entry',
-                        'raw_input' => $request->text,
+                        'raw_input' => $request->input('raw_input', $item['item']),
                         'confidence_score' => $item['confidence_score'] ?? null,
                     ]);
                     $savedItems[] = $expense;
@@ -121,7 +120,7 @@ class SmartEntryController extends BaseController
                         'amount' => $item['amount'],
                         'note' => $item['item'],
                         'received_at' => $item['date'] ?? date('Y-m-d'),
-                        'raw_input' => $request->text
+                        'raw_input' => $request->input('raw_input', $item['item'])
                     ]);
                     $savedItems[] = $receipt;
                     $affectedIncomeIds[$income->id] = true;

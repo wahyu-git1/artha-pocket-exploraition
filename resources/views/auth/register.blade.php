@@ -19,28 +19,85 @@
             <h1 class="text-2xl font-bold text-[#1F4E79]">CatatDuit</h1>
             <p class="text-sm text-gray-500 mt-1">Catat, rencanakan, tenang.</p>
         </div>
-        <form action="#" class="space-y-4">
+        <form id="register-form" action="#" class="space-y-4">
+            @csrf
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-                <input type="text" placeholder="Rina" class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:outline-none">
+                <input id="name" type="text" placeholder="Rina" required class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:outline-none">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" placeholder="nama@email.com" class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:outline-none">
+                <input id="email" type="email" placeholder="nama@email.com" required class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:outline-none">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi</label>
                 <div class="relative">
-                    <input type="password" placeholder="••••••••" class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:outline-none">
-                    <button type="button" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400">Tampilkan</button>
+                    <input id="password" type="password" placeholder="••••••••" required class="w-full px-4 py-3 bg-[#F6F8FB] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1F4E79] focus:outline-none">
+                    <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-[#1F4E79]">Tampilkan</button>
                 </div>
                 <p class="text-xs text-gray-400 mt-2">Minimal 8 karakter</p>
             </div>
-            <button class="w-full bg-[#1F4E79] hover:bg-[#163859] text-white font-semibold py-3 px-4 rounded-xl mt-2">Daftar</button>
+            <button type="submit" id="btn-register" class="w-full bg-[#1F4E79] hover:bg-[#163859] text-white font-semibold py-3 px-4 rounded-xl mt-2 transition duration-200">Daftar</button>
         </form>
         <div class="mt-6 text-center">
             <a href="/login" class="text-sm text-gray-600">Sudah punya akun? <span class="text-[#48CAE4] font-medium hover:underline">Masuk</span></a>
         </div>
     </div>
+
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-register');
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            btn.innerText = 'Mendaftar...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/v1/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (data.data && data.data.access_token) {
+                        localStorage.setItem('token', data.data.access_token);
+                    }
+                    alert('Pendaftaran berhasil! Mengarahkan ke beranda...');
+                    window.location.href = '/beranda';
+                } else {
+                    let errMsg = data.error?.message || data.message || 'Pendaftaran gagal.';
+                    if (data.error?.details && typeof data.error.details === 'object') {
+                        const detailMessages = Object.values(data.error.details).flat().join('\n');
+                        if (detailMessages) errMsg += '\n' + detailMessages;
+                    }
+                    alert(errMsg);
+                    btn.innerText = 'Daftar';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                alert('Terjadi kesalahan koneksi.');
+                btn.innerText = 'Daftar';
+                btn.disabled = false;
+            }
+        });
+
+        // Toggle password
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const input = document.getElementById('password');
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.innerText = 'Sembunyikan';
+            } else {
+                input.type = 'password';
+                this.innerText = 'Tampilkan';
+            }
+        });
+    </script>
 </body>
 </html>
