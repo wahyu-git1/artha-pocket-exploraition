@@ -29,7 +29,10 @@ class SmartEntryController extends BaseController
                 );
             }
 
-            return $this->error(ErrorCode::SERVER_ERROR, 'Gagal memproses teks.');
+            return $this->error(ErrorCode::SERVER_ERROR, 'Gagal memproses teks.', [
+                'debug' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
         }
     }
 
