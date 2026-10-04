@@ -10,6 +10,15 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $expenseCategories = [
+            // Kategori Bisnis & Operasional UMKM
+            ['name' => 'Kulakan & Bahan Baku (HPP)', 'icon' => 'package', 'color' => '#EA580C', 'bucket' => 'need'],
+            ['name' => 'Operasional Usaha (OpEx)', 'icon' => 'cog', 'color' => '#2563EB', 'bucket' => 'need'],
+            ['name' => 'Gaji Karyawan & Upah', 'icon' => 'users', 'color' => '#059669', 'bucket' => 'need'],
+            ['name' => 'Marketing & Promosi', 'icon' => 'megaphone', 'color' => '#D97706', 'bucket' => 'want'],
+            ['name' => 'Cicilan & Utang Usaha', 'icon' => 'credit-card', 'color' => '#DC2626', 'bucket' => 'need'],
+            ['name' => 'Prive / Gaji Owner', 'icon' => 'wallet', 'color' => '#7C3AED', 'bucket' => 'want'],
+
+            // Kategori Pengeluaran Pribadi
             ['name' => 'Makanan & Minuman', 'icon' => 'utensils', 'color' => '#EF4444', 'bucket' => 'need'],
             ['name' => 'Transportasi', 'icon' => 'car', 'color' => '#F97316', 'bucket' => 'need'],
             ['name' => 'Belanja', 'icon' => 'shopping-bag', 'color' => '#EC4899', 'bucket' => 'want'],
@@ -37,6 +46,13 @@ class CategorySeeder extends Seeder
         }
 
         $incomeCategories = [
+            // Kategori Pemasukan Bisnis & Usaha
+            ['name' => 'Penjualan Produk (Omzet)', 'icon' => 'store', 'color' => '#16A34A'],
+            ['name' => 'Jasa & Proyek Klien', 'icon' => 'briefcase', 'color' => '#2563EB'],
+            ['name' => 'Pelunasan Piutang', 'icon' => 'hand-coins', 'color' => '#0D9488'],
+            ['name' => 'Suntikan Modal / Pinjaman', 'icon' => 'landmark', 'color' => '#9333EA'],
+
+            // Kategori Pemasukan Pribadi & Lainnya
             ['name' => 'Gaji', 'icon' => 'briefcase', 'color' => '#22C55E'],
             ['name' => 'Freelance', 'icon' => 'laptop', 'color' => '#3B82F6'],
             ['name' => 'Bisnis', 'icon' => 'store', 'color' => '#F59E0B'],

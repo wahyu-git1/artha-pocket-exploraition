@@ -26,9 +26,9 @@ class AiSmartEntryParser
         $today = Carbon::now()->format('Y-m-d');
         
         $prompt = <<<TEXT
-You are an expert financial categorizer API.
+You are an expert financial and business accounting categorizer API (Virtual CFO & Bookkeeper) for Solopreneurs, Freelancers, and Personal Finance in Indonesia.
 Extract financial transactions from the user's natural language input.
-The input might contain multiple items (e.g. "hari ini beli bakso 10k, kos 500k").
+The input might contain multiple items (e.g. "kulakan beras 500rb, bayar ongkir jne 50rb, sama omzet kasir laku 1.2jt").
 
 Current Date Context: {$today}
 "hari ini" / "tadi" = {$today}
@@ -37,18 +37,35 @@ Current Date Context: {$today}
 Available Categories:
 {$categoryContext}
 
-Instructions:
-1. Extract each distinct expense or income.
-2. If it's something they paid/bought, type is "expense". If they received/got, type is "income".
-3. Map the amount cleanly to an integer (e.g. "10k" = 10000, "1.5jt" = 1500000).
-4. Match it to the CLOSEST available category ID. If none fits well, return null for category_id.
-5. Return ONLY a pure JSON array of objects. Do not include markdown code block syntax (like ```json), just the array itself.
+Classification & Mapping Rules:
+1. EXPENSE (Uang Keluar / Debit Beban):
+   - Belanja bahan dagang/stok/kulakan/grosir/bahan baku -> Match to "Kulakan & Bahan Baku (HPP)".
+   - Ongkir pengiriman kurir, packing, kardus, lakban, sewa lapak/ruko, listrik toko, pulsa jualan -> Match to "Operasional Usaha (OpEx)".
+   - Gaji staf, upah tukang, barista, asisten toko -> Match to "Gaji Karyawan & Upah".
+   - Iklan IG/FB/TikTok Ads, endorse, cetak spanduk/banner/stiker -> Match to "Marketing & Promosi".
+   - Bayar angsuran bank/KUR, cicilan modal, bayar tempo/utang supplier -> Match to "Cicilan & Utang Usaha".
+   - Owner mengambil kas usaha untuk belanja dapur/pribadi/gaji sendiri -> Match to "Prive / Gaji Owner".
+   - Pengeluaran pribadi umum (makan siang, ngopi, bensin pribadi, bioskop, belanja baju) -> Match to relevant personal category ("Makanan & Minuman", "Transportasi", "Belanja", etc.).
+
+2. INCOME (Uang Masuk / Kredit Pendapatan):
+   - Penjualan dagangan, orderan laku, kasir QRIS, omzet toko -> Match to "Penjualan Produk (Omzet)".
+   - Fee proyek freelance, jasa desain, jasa katering, invoice jasa, honor -> Match to "Jasa & Proyek Klien".
+   - Pelanggan melunasi utang/bon tempo masa lalu -> Match to "Pelunasan Piutang".
+   - Pinjaman modal usaha (KUR/Bank), investor, suntikan dana -> Match to "Suntikan Modal / Pinjaman".
+   - Gaji bulanan kantor atau transfer hadiah -> Match to "Gaji" or "Hadiah".
+
+General Instructions:
+1. Extract each distinct expense or income item.
+2. If paid/bought/cost, type is "expense". If received/earned/sold/inflow, type is "income".
+3. Cleanly parse amount to an integer (e.g. "10k" = 10000, "150rb" = 150000, "1.5jt" = 1500000).
+4. Match to the CLOSEST available category ID from the list. If none fits well, return null for category_id.
+5. Return ONLY a pure JSON array of objects. Do NOT wrap in markdown code blocks or extra text.
 
 Schema per object:
 {
-    "item": "Cleaned up item name, e.g. Bakso",
-    "amount": 10000,
-    "type": "expense", // atau "income"
+    "item": "Cleaned up item name, e.g. Kulakan Beras 5 Karung",
+    "amount": 500000,
+    "type": "expense",
     "date": "YYYY-MM-DD",
     "category_id": "uuid-here or null",
     "category_name": "Name of the matched category or null",

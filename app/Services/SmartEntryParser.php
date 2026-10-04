@@ -10,8 +10,8 @@ use Illuminate\Support\Str;
 
 class SmartEntryParser
 {
-    protected array $expenseKeywords = ['beli', 'bayar', 'jajan', 'keluar'];
-    protected array $incomeKeywords = ['gajian', 'terima', 'dapat', 'masuk'];
+    protected array $expenseKeywords = ['beli', 'bayar', 'jajan', 'keluar', 'kulak', 'kulakan', 'ongkir', 'prive', 'cicil', 'angsuran', 'sewa'];
+    protected array $incomeKeywords = ['gajian', 'terima', 'dapat', 'masuk', 'laku', 'omzet', 'jual', 'penjualan', 'cair', 'piutang', 'closing'];
     protected array $dateKeywords = [
         'kemarin' => '-1 day',
         'tadi pagi' => 'today',
@@ -200,13 +200,24 @@ class SmartEntryParser
             }
         }
 
-        // 2. Check rules
+        // 2. Check rules (exact match first, then partial match)
         foreach ($words as $word) {
             if (strlen($word) < 3) continue;
-            $rule = CategoryRule::where('keyword', 'like', "%{$word}%")
+            
+            $rule = CategoryRule::where('keyword', $word)
+                    ->whereHas('category', fn($q) => $q->where('type', $type))
                     ->with('category')
                     ->orderByDesc('priority')
                     ->first();
+
+            if (!$rule) {
+                $rule = CategoryRule::where('keyword', 'like', "%{$word}%")
+                        ->whereHas('category', fn($q) => $q->where('type', $type))
+                        ->with('category')
+                        ->orderByDesc('priority')
+                        ->first();
+            }
+
             if ($rule && $rule->category->type === $type) {
                 return ['category_id' => $rule->category_id, 'category_name' => $rule->category->name, 'source' => 'rule'];
             }
